@@ -3,6 +3,7 @@
 
 use std::sync::{Arc, Mutex};
 
+static MAX_EVENTS: usize = 1000;
 static VALID_BGS: &'static [&'static str] = &[
     "desmarais",
     "minto",
@@ -58,10 +59,13 @@ impl EventBackend {
         }
     }
 
-    pub fn add(&self, event: Event) -> usize {
+    pub fn add(&self, event: Event) -> Option<usize> {
         let mut events = self.event_list.lock().unwrap();
+        if events.len() >= MAX_EVENTS {
+            return None
+        }
         events.push(Arc::new(event));
-        events.len() - 1
+        Some(events.len() - 1)
     }
 
     pub fn count(&self) -> usize {

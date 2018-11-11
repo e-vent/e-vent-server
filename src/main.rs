@@ -23,8 +23,12 @@ fn get(state: State<EventBackend>, id: usize) -> Option<Json<Event>> {
 }
 
 #[post("/", format="json", data="<event>")]
-fn post(state: State<EventBackend>, event: Json<Event>) -> String {
-    format!("{}", state.add(event.0.clone()))
+fn post(state: State<EventBackend>, event: Json<Event>) -> Option<String> {
+    if let Some(id) = state.add(event.0.clone()) {
+        Some(format!("{}", id))
+    } else {
+        None
+    }
 }
 
 #[get("/count")]
@@ -37,7 +41,7 @@ fn add_dummy_event(state: &EventBackend, name: &str, desc: &str, bg: &str) {
         String::from(name),
         String::from(desc),
         String::from(bg),
-    ).unwrap());
+    ).unwrap()).unwrap();
 }
 
 fn main() {
