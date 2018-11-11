@@ -1,3 +1,5 @@
 /target
 **/*.rs.bk
 .idea/
+server.log
+server.log.bak

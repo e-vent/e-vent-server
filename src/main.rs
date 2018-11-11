@@ -4,7 +4,7 @@ extern crate e_vent_server;
 use e_vent_server::*;
 
 #[macro_use] extern crate rocket;
-use rocket::State;
+use rocket::{Rocket, State};
 extern crate rocket_contrib;
 use rocket_contrib::json::Json;
 
@@ -55,7 +55,7 @@ fn add_dummy_event(state: &EventBackend, name: &str, desc: &str, bg: &str) {
     ).into_validated().unwrap()).unwrap();
 }
 
-fn main() {
+fn rocket() -> Rocket {
     let state = EventBackend::new();
 
     add_dummy_event(&state, "Breathing","The most popular event.", "desmarais");
@@ -68,5 +68,9 @@ fn main() {
         .attach(ErrorObfuscator())
         .mount("/", routes![index, count])
         .mount("/events", routes![get, post])
-        .launch();
+}
+
+fn main() {
+    println!("E-vent backend server running");
+    rocket().launch();
 }
