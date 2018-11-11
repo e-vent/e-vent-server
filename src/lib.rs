@@ -1,4 +1,6 @@
 
+#[macro_use] extern crate serde_derive;
+
 use std::sync::{Arc, Mutex};
 
 static VALID_BGS: &'static [&'static str] = &[
@@ -7,7 +9,7 @@ static VALID_BGS: &'static [&'static str] = &[
     "tabaret",
 ];
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Serialize, Deserialize, Clone)]
 pub struct Event {
     name: String,
     desc: String,

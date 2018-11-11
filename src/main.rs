@@ -3,15 +3,26 @@
 extern crate e_vent_server;
 use e_vent_server::*;
 
-#[macro_use]
-extern crate rocket;
+#[macro_use] extern crate rocket;
+use rocket::State;
+extern crate rocket_contrib;
+use rocket_contrib::json::Json;
 
 #[get("/")]
 fn index() -> &'static str {
     "This is E-vent's backend server. You probably want to go to e-vent.github.io"
 }
 
-fn add_dummy_event(state: &EventBackend, name: &str, dec: &str, bg: &str) {
+#[get("/<id>")]
+fn get(state: State<EventBackend>, id: usize) -> Option<Json<Event>> {
+    if let Some(event) = state.get(id) {
+        Some(Json((*event).clone()))
+    } else {
+        None
+    }
+}
+
+fn add_dummy_event(state: &EventBackend, name: &str, desc: &str, bg: &str) {
     state.add(Event::from_details(
         String::from(name),
         String::from(desc),
@@ -20,7 +31,7 @@ fn add_dummy_event(state: &EventBackend, name: &str, dec: &str, bg: &str) {
 }
 
 fn main() {
-    state = EventBackend::new();
+    let state = EventBackend::new();
 
     add_dummy_event(&state, "Breathing","The most popular event.", "desmarais");
     add_dummy_event(&state, "Drinking","The second most popular event.", "desmarais");
@@ -28,6 +39,6 @@ fn main() {
 
     rocket::ignite()
         .manage(state)
-        .mount("/", routes![index])
+        .mount("/", routes![index, get])
         .launch();
 }
