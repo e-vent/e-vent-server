@@ -63,4 +63,8 @@ impl EventBackend {
         events.push(Arc::new(event));
         events.len() - 1
     }
+
+    pub fn count(&self) -> usize {
+        self.event_list.lock().unwrap().len()
+    }
 }

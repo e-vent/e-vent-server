@@ -27,6 +27,11 @@ fn post(state: State<EventBackend>, event: Json<Event>) -> String {
     format!("{}", state.add(event.0.clone()))
 }
 
+#[get("/count")]
+fn count(state: State<EventBackend>) -> String {
+    format!("{}", state.count())
+}
+
 fn add_dummy_event(state: &EventBackend, name: &str, desc: &str, bg: &str) {
     state.add(Event::from_details(
         String::from(name),
@@ -44,7 +49,7 @@ fn main() {
 
     rocket::ignite()
         .manage(state)
-        .mount("/", routes![index])
+        .mount("/", routes![index, count])
         .mount("/events", routes![get, post])
         .launch();
 }
