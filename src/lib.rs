@@ -10,7 +10,14 @@ static VALID_BGS: &'static [&'static str] = &[
     "tabaret",
 ];
 
-#[derive(PartialEq, Eq, Serialize, Deserialize, Clone)]
+#[derive(Clone, Deserialize)]
+pub struct RawEvent {
+    pub name: String,
+    pub desc: String,
+    pub bg: String,
+}
+
+#[derive(PartialEq, Eq, Serialize, Clone)]
 pub struct Event {
     name: String,
     desc: String,
@@ -27,15 +34,24 @@ fn validate_background(bg: &str) -> bool {
     VALID_BGS.contains(&bg)
 }
 
-impl Event {
-    pub fn from_details(name: String, desc: String, bg: String) -> Option<Event> {
-        if !validate_details(&name, &desc) || !validate_background(&bg) {
-            return None;
-        }
-        Some(Event {
+impl RawEvent {
+    pub fn from_details(name: String, desc: String, bg: String) -> RawEvent {
+        RawEvent {
             name,
             desc,
             bg,
+        }
+    }
+
+    pub fn into_validated(self) -> Option<Event> {
+        if !validate_details(&self.name, &self.desc)
+            || !validate_background(&self.bg) {
+            return None;
+        }
+        Some(Event {
+            name: self.name,
+            desc: self.desc,
+            bg: self.bg,
         })
     }
 }

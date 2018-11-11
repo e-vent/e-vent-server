@@ -22,10 +22,14 @@ fn get(state: State<EventBackend>, id: usize) -> Option<Json<Event>> {
     }
 }
 
-#[post("/", format="json", data="<event>")]
-fn post(state: State<EventBackend>, event: Json<Event>) -> Option<String> {
-    if let Some(id) = state.add(event.0.clone()) {
-        Some(format!("{}", id))
+#[post("/", format="json", data="<raw_event>")]
+fn post(state: State<EventBackend>, raw_event: Json<RawEvent>) -> Option<String> {
+    if let Some(event) = raw_event.0.clone().into_validated() {
+        if let Some(id) = state.add(event) {
+            Some(format!("{}", id))
+        } else {
+            None
+        }
     } else {
         None
     }
@@ -37,11 +41,11 @@ fn count(state: State<EventBackend>) -> String {
 }
 
 fn add_dummy_event(state: &EventBackend, name: &str, desc: &str, bg: &str) {
-    state.add(Event::from_details(
+    state.add(RawEvent::from_details(
         String::from(name),
         String::from(desc),
         String::from(bg),
-    ).unwrap()).unwrap();
+    ).into_validated().unwrap()).unwrap();
 }
 
 fn main() {
