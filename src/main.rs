@@ -65,6 +65,7 @@ fn main() {
     rocket::ignite()
         .manage(state)
         .attach(IPLogger())
+        .attach(ErrorObfuscator())
         .mount("/", routes![index, count])
         .mount("/events", routes![get, post])
         .launch();
