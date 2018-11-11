@@ -44,6 +44,7 @@ fn main() {
 
     rocket::ignite()
         .manage(state)
-        .mount("/", routes![index, get, post])
+        .mount("/", routes![index])
+        .mount("/events", routes![get, post])
         .launch();
 }
