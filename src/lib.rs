@@ -24,14 +24,20 @@ pub struct Event {
     bg: String,
 }
 
-fn validate_details(name: &str, desc: &str) -> bool {
+fn validate_chars(s: &str) -> bool {
+    for c in s.chars() {
+        if c < ' ' || c > '~' { // ASCII control and Unicode are banned
+            return false
+        }
+    }
+    true
+}
+
+fn validate_details(name: &str, desc: &str, bg: &str) -> bool {
     let name_len = name.len();
     let desc_len = desc.len();
     0 < name_len && name_len < 20 && desc_len <= 280
-}
-
-fn validate_background(bg: &str) -> bool {
-    VALID_BGS.contains(&bg)
+        && validate_chars(name) && validate_chars(desc) && VALID_BGS.contains(&bg)
 }
 
 impl RawEvent {
@@ -44,8 +50,7 @@ impl RawEvent {
     }
 
     pub fn into_validated(self) -> Option<Event> {
-        if !validate_details(&self.name, &self.desc)
-            || !validate_background(&self.bg) {
+        if !validate_details(&self.name, &self.desc, &self.bg) {
             return None;
         }
         Some(Event {
