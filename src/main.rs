@@ -1,5 +1,8 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+extern crate e_vent_server;
+use e_vent_server::*;
+
 #[macro_use]
 extern crate rocket;
 
@@ -10,6 +13,7 @@ fn index() -> &'static str {
 
 fn main() {
     rocket::ignite()
+        .manage(EventBackend::new())
         .mount("/", routes![index])
         .launch();
 }
