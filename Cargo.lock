@@ -68,7 +68,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "e-vent-server"
+name = "e_vent_server"
 version = "0.1.0"
 dependencies = [
  "rocket 0.4.0-rc.1 (registry+https://github.com/rust-lang/crates.io-index)",

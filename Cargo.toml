@@ -1,5 +1,5 @@
 [package]
-name = "e-vent-server"
+name = "e_vent_server"
 version = "0.1.0"
 authors = ["Daniel Tang <danielzgtg.opensource@gmail.com>"]
 edition = "2018"
