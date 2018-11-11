@@ -1,4 +1,4 @@
 [global]
 workers = 2
 log = "normal"
-limits = { forms = 1024, json = 1024 }
+limits = { forms = 100, json = 400 }
