@@ -3,6 +3,9 @@
 
 use std::sync::{Arc, Mutex};
 
+mod logger;
+pub use self::logger::*;
+
 static MAX_EVENTS: usize = 1000;
 static VALID_BGS: &'static [&'static str] = &[
     "desmarais",
@@ -10,14 +13,14 @@ static VALID_BGS: &'static [&'static str] = &[
     "tabaret",
 ];
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct RawEvent {
     pub name: String,
     pub desc: String,
     pub bg: String,
 }
 
-#[derive(PartialEq, Eq, Serialize, Clone)]
+#[derive(PartialEq, Eq, Serialize, Clone, Debug)]
 pub struct Event {
     name: String,
     desc: String,
@@ -83,8 +86,10 @@ impl EventBackend {
     pub fn add(&self, event: Event) -> Option<usize> {
         let mut events = self.event_list.lock().unwrap();
         if events.len() >= MAX_EVENTS {
+            log_too_many_events();
             return None
         }
+        log_add_event(&event);
         events.push(Arc::new(event));
         Some(events.len() - 1)
     }

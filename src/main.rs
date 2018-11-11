@@ -16,8 +16,10 @@ fn index() -> &'static str {
 #[get("/<id>")]
 fn get(state: State<EventBackend>, id: usize) -> Option<Json<Event>> {
     if let Some(event) = state.get(id) {
+        log_get_ok(id);
         Some(Json((*event).clone()))
     } else {
+        log_get_err(id);
         None
     }
 }
@@ -26,18 +28,23 @@ fn get(state: State<EventBackend>, id: usize) -> Option<Json<Event>> {
 fn post(state: State<EventBackend>, raw_event: Json<RawEvent>) -> Option<String> {
     if let Some(event) = raw_event.0.clone().into_validated() {
         if let Some(id) = state.add(event) {
+            log_post_ok(id);
             Some(format!("{}", id))
         } else {
+            log_post_add_err(&raw_event.0);
             None
         }
     } else {
+        log_post_validate_err(&raw_event.0);
         None
     }
 }
 
 #[get("/count")]
 fn count(state: State<EventBackend>) -> String {
-    format!("{}", state.count())
+    let count = state.count();
+    log_count(count);
+    format!("{}", count)
 }
 
 fn add_dummy_event(state: &EventBackend, name: &str, desc: &str, bg: &str) {
@@ -57,6 +64,7 @@ fn main() {
 
     rocket::ignite()
         .manage(state)
+        .attach(IPLogger())
         .mount("/", routes![index, count])
         .mount("/events", routes![get, post])
         .launch();
