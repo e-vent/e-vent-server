@@ -5,9 +5,11 @@ extern crate rocket;
 
 #[get("/")]
 fn index() -> &'static str {
-    "Hello, world!"
+    "This is E-vent's backend server. You probably want to go to e-vent.github.io"
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![index]).launch();
+    rocket::ignite()
+        .mount("/", routes![index])
+        .launch();
 }
