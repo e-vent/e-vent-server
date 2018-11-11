@@ -13,7 +13,7 @@ static VALID_BGS: &'static [&'static str] = &[
 pub struct Event {
     name: String,
     desc: String,
-    bg: &'static str,
+    bg: String,
 }
 
 fn validate_details(name: &str, desc: &str) -> bool {
@@ -22,29 +22,20 @@ fn validate_details(name: &str, desc: &str) -> bool {
     0 < name_len && name_len < 20 && desc_len <= 280
 }
 
-fn try_coerce_background(bg: &str) -> Option<&'static str> {
-    for &x in VALID_BGS {
-        if x == bg {
-            return Some(x)
-        }
-    }
-    None
+fn validate_background(bg: &str) -> bool {
+    VALID_BGS.contains(&bg)
 }
 
 impl Event {
-    pub fn from_details(name: String, desc: String, bg: &str) -> Option<Event> {
-        if !validate_details(&name, &desc) {
+    pub fn from_details(name: String, desc: String, bg: String) -> Option<Event> {
+        if !validate_details(&name, &desc) || !validate_background(&bg) {
             return None;
         }
-        if let Some(bg) = try_coerce_background(bg) {
-            Some(Event {
-                name,
-                desc,
-                bg,
-            })
-        } else {
-            None
-        }
+        Some(Event {
+            name,
+            desc,
+            bg,
+        })
     }
 }
 

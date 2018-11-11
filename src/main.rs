@@ -22,11 +22,16 @@ fn get(state: State<EventBackend>, id: usize) -> Option<Json<Event>> {
     }
 }
 
+#[post("/", format="json", data="<event>")]
+fn post(state: State<EventBackend>, event: Json<Event>) -> String {
+    format!("{}", state.add(event.0.clone()))
+}
+
 fn add_dummy_event(state: &EventBackend, name: &str, desc: &str, bg: &str) {
     state.add(Event::from_details(
         String::from(name),
         String::from(desc),
-        bg,
+        String::from(bg),
     ).unwrap());
 }
 
@@ -39,6 +44,6 @@ fn main() {
 
     rocket::ignite()
         .manage(state)
-        .mount("/", routes![index, get])
+        .mount("/", routes![index, get, post])
         .launch();
 }
