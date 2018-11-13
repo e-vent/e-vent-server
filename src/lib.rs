@@ -7,6 +7,8 @@ mod logger;
 pub use self::logger::*;
 mod error_obfuscator;
 pub use self::error_obfuscator::*;
+mod allow_cors;
+pub use self::allow_cors::*;
 
 static MAX_EVENTS: usize = 1000;
 static VALID_BGS: &'static [&'static str] = &[
