@@ -41,7 +41,7 @@ fn validate_chars(s: &str) -> bool {
 fn validate_details(name: &str, desc: &str, bg: &str) -> bool {
     let name_len = name.len();
     let desc_len = desc.len();
-    0 < name_len && name_len < 20 && desc_len <= 280
+    0 < name_len && name_len < 50 && desc_len <= 280
         && validate_chars(name) && validate_chars(desc) && VALID_BGS.contains(&bg)
 }
 
