@@ -2,3 +2,5 @@
 workers = 2
 log = "normal"
 limits = { forms = 100, json = 400 }
+address = "0.0.0.0"
+port = 8000
