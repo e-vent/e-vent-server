@@ -67,6 +67,7 @@ fn rocket() -> Rocket {
         .attach(IPLogger())
         .attach(ErrorObfuscator())
         .attach(CORSEnabler())
+        .attach(UALogger())
         .mount("/", routes![index, count])
         .mount("/events", routes![get, post])
 }
