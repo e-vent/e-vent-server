@@ -3,4 +3,7 @@ workers = 2
 log = "normal"
 limits = { forms = 100, json = 400 }
 address = "0.0.0.0"
-port = 8000
+port=8443
+[global.tls]
+certs = "/etc/letsencrypt/live/danielzgtg.duckdns.org/fullchain.pem"
+key = "/etc/letsencrypt/live/danielzgtg.duckdns.org/privkey.pem"
