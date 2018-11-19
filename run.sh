@@ -6,5 +6,5 @@ if [ -f server.log ]; then
     mv server.log server.log.bak
 fi
 echo Server starting
-cargo run --release | tee server.log
+./target/release/e_vent_server | tee server.log
 echo Server died
